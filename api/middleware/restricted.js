@@ -3,11 +3,13 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../secrets'); 
 
 const validateRegister = async (req, res, next) => {
-  const [user] = await User.findBy({ username: req.body.username })
+  const user = await User.findBy({ username: req.body.username })
+  console.log(user, "register")
   if(!req.body.username || !req.body.password) {
       res.status(404).json({ message: "username and password required" })
       next()
-  } else if(user) {
+  } else if(user.length > 0) {
+    console.log(user, "failed")
     res.status(404).json({ message: "username taken" })
     next()
   }
