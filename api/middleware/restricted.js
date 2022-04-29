@@ -1,4 +1,6 @@
 const User = require('../users/users-model');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../secrets'); 
 
 const validateRegister = async (req, res, next) => {
   const [user] = await User.findBy({ username: req.body.username })
@@ -30,9 +32,29 @@ const validateLogin = async (req, res, next) => {
   next()
 };
 
+const restricted = (req, res, next) => {
+  const token = req.headers.authorization;
+  console.log(token, "token")
+  if(!token) {
+    res.status(401).json({ message: "token required" })
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+    if(err) {
+      console.log(decodedToken, "dec")
+      res.status(401).json({ message: "token invalid"  })
+    } else {
+      console.log(decodedToken, "dec")
+      req.decodedToken = decodedToken
+      next()
+    }
+  })
+}
+
 module.exports = {
   validateRegister,
-  validateLogin
+  validateLogin,
+  restricted
 }
 
 /*
