@@ -5,11 +5,14 @@ function find() {
 }
 
 function findBy(filter) {
+    console.log(filter, "filter")
     if(filter.username === undefined) {
+        console.log("return")
         return;
     } else {
+        console.log("here")
         return db('users')
-        .select('username')
+        .select('username', 'password')
         .where(filter)
     }
 }

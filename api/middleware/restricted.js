@@ -1,10 +1,10 @@
 const User = require('../users/users-model');
 
-const validateUser = async (req, res, next) => {
-  const user = await User.findBy({ username: req.body.username })
+const validateRegister = async (req, res, next) => {
+  const [user] = await User.findBy({ username: req.body.username })
   if(!req.body.username || !req.body.password) {
-    res.status(404).json({ message: "username and password required" })
-    next()
+      res.status(404).json({ message: "username and password required" })
+      next()
   } else if(user) {
     res.status(404).json({ message: "username taken" })
     next()
@@ -13,8 +13,26 @@ const validateUser = async (req, res, next) => {
   next()
 };
 
+const validateLogin = async (req, res, next) => {
+  const user = await User.findBy({ username: req.body.username })
+  console.log(user, "user")
+  if(!req.body.username || !req.body.password) {
+    console.log("missing")
+    res.status(404).json({ message: "username and password required" })
+    next()
+  } else if(user.length === 0) {
+    console.log("not")
+    res.status(404).json({ message: "invalid credentials" })
+    next()
+  }
+  console.log("end")
+  req.user = user;
+  next()
+};
+
 module.exports = {
-  validateUser
+  validateRegister,
+  validateLogin
 }
 
 /*
