@@ -1,33 +1,7 @@
-const User = require('../users/users-model');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../secrets'); 
 
-const validateRegister = async (req, res, next) => {
-  const user = await User.findBy({ username: req.body.username })
-  if(!req.body.username || !req.body.password) {
-      res.status(404).json({ message: "username and password required" })
-      next()
-  } else if(user.length > 0) {
-    res.status(404).json({ message: "username taken" })
-    next()
-  }
 
-  next()
-};
-
-const validateLogin = async (req, res, next) => {
-  const user = await User.findBy({ username: req.body.username })
-  if(!req.body.username || !req.body.password) {
-    res.status(404).json({ message: "username and password required" })
-    next()
-  } else if(user.length === 0) {
-    res.status(404).json({ message: "invalid credentials" })
-    next()
-  }
-
-  req.user = user;
-  next()
-};
 
 const restricted = (req, res, next) => {
   const token = req.headers.authorization;
@@ -47,8 +21,6 @@ const restricted = (req, res, next) => {
 }
 
 module.exports = {
-  validateRegister,
-  validateLogin,
   restricted
 }
 

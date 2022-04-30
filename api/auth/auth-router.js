@@ -2,10 +2,10 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../users/users-model');
-const { validateRegister, validateLogin } = require('../middleware/restricted');
+const { validateBody, validateUsername } = require('../middleware/middleware');
 const { JWT_SECRET } = require('../secrets');
 
-router.post('/register', validateRegister, (req, res, next) => {
+router.post('/register', validateBody, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -34,13 +34,13 @@ router.post('/register', validateRegister, (req, res, next) => {
   const { username, password } = req.body;
   const hash = bcrypt.hashSync(password, 8);
   User.add({ username, password: hash })
-      .then(reg => {
-        res.status(201).json(reg);
+      .then(response => {
+        res.status(201).json(response);
       })
       .catch(next);
 });
 
-router.post('/login', validateLogin, (req, res, next) => {
+router.post('/login', validateUsername, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
