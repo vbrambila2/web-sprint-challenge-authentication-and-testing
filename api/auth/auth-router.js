@@ -64,14 +64,12 @@ router.post('/login', validateLogin, (req, res, next) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
- console.log(req.body, "auth")
- console.log(req.user[0].password, "auth user")
   if(bcrypt.compareSync(req.body.password, req.user[0].password)) {
-    console.log(req.user.password, "inside")
     const token = generateToken(req.user)
     res.json({ message: `welcome, ${req.user[0].username}`, token })
+  } else if(!bcrypt.compareSync(req.body.password, req.user[0].password)) {
+    res.status(404).json({ message: "invalid credentials" })
   } else {
-    console.log("error")
     next({ status: 401, message: 'invalid credentials' })
   }
 });
