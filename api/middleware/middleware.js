@@ -16,10 +16,10 @@ const validateBody = async (req, res, next) => {
   const validateUsername = async (req, res, next) => {
     const user = await User.findBy({ username: req.body.username })
     if(!req.body.username || !req.body.password) {
-      res.status(404).json({ message: "username and password required" })
+      res.status(401).json({ message: "username and password required" })
       next()
     } else if(user.length === 0) {
-      res.status(404).json({ message: "invalid credentials" })
+      res.status(401).json({ message: "invalid credentials" })
       next()
     }
   
