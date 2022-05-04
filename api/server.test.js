@@ -94,7 +94,7 @@ describe('HTTP API tests', () => {
     expect(res.req.data).toBe(undefined);
 
     res = await request(server).post('/api/auth/login').send({ password: '7777' });
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(401);
     expect(res.req.data).toBe(undefined);
   })
 });
